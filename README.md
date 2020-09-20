@@ -1,4 +1,4 @@
-# Plant Disease Classifier by Christian
+# Plant Disease Classifier by cmb87 using SqueezeNet
 ## Required Packages:
 
         matplotlib
