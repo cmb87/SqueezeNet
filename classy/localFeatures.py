@@ -22,9 +22,10 @@ imageHeight = 120
 imageChannels = 3
 epocheMax = 100
 batchSize = 1
-trainpath = '/home/cp/projects/01_machine_learning/90_dataSets/anomalies/concrete/'
-testpath = '/home/cp/projects/01_machine_learning/90_dataSets/anomalies/concrete/'
-outputDir = './trainingCracks'
+trainpath = '/data/concreteDataSet/'
+testpath = '/data/concreteDataSet/'
+outputDir = '/results/'
+
 
 # Setup logger
 logging.basicConfig(
@@ -83,4 +84,5 @@ for it, (imgs, labels) in enumerate(pipeTest.ds.take(31)):
     plt.title(f"Pred {idx} True {idxTrue}")
     plt.imshow(imgs[0,...])
     plt.imshow(anomalies[0,:,:,0], cmap="jet", alpha=0.3)
-    plt.show()
+    plt.savefig( os.path.join(outputDir, f"crackdet{it}.png"))
+    plt.close()
