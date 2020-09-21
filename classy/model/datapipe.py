@@ -40,12 +40,15 @@ class DataPipeline:
     
 
     # ============================
-    def build(self, imageSize, batchSize=12, shuffle_buffer_size=600, cache=None, shuffle=False):
+    def build(self, imageSize, batchSize=12, shuffle_buffer_size=6000, cache=None, shuffle=False):
 
         self.imageSize = imageSize
 
         self.ds = tf.data.Dataset.list_files(self.imagePath+self.searchPatternImage, shuffle=shuffle)
-        self.ds = self.ds.map(self._processLoadImage)
+
+        if shuffle:
+            self.ds = self.ds.shuffle(buffer_size=shuffle_buffer_size)
+            self.ds = self.ds.repeat()
 
         # Augment the image
         if cache:
@@ -54,9 +57,8 @@ class DataPipeline:
             else:
                 self.ds = self.ds.cache()
 
-        if shuffle:
-            self.ds = self.ds.shuffle(buffer_size=shuffle_buffer_size)
-            self.ds = self.ds.repeat()
+
+        self.ds = self.ds.map(self._processLoadImage)
 
         # Augment the image
         if 'fliph' in self.augmentations:
@@ -132,14 +134,14 @@ class DataPipeline:
 
 if __name__ == '__main__':
 
-    IMAGE_DIR_PATH = '/home/cp/projects/01_machine_learning/90_dataSets/plants/Train/'
+    IMAGE_DIR_PATH = '/data/concreteDataSet/'
 
     gen = DataPipeline(
             imagePath=IMAGE_DIR_PATH,
             searchPatternImage='*/*.jpg',
         )
 
-    gen.build(imageSize=(120,120))
+    gen.build(imageSize=(120,120), shuffle=True)
 
 
 
